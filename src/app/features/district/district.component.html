@@ -1,0 +1,15 @@
+@for (district of district$ | async; track district.id) {
+<p-card header="{{ district.name }}" [style]="{ width: '360px' }">
+  <ng-template pTemplate="header">
+    <img alt="Card" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Details"
+      icon="pi pi-external-link"
+      routerLink="/district-details/{{ district.id }}"
+    >
+    </p-button>
+  </ng-template>
+</p-card>
+}

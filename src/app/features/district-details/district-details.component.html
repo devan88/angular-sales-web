@@ -1,0 +1,121 @@
+@if(district$ | async; as district) {
+<p-splitter
+  [panelSizes]="[25, 75]"
+  styleClass="w-full h-full"
+  pDroppable
+  (onDrop)="removeSecondarySalesPerson()"
+>
+  <ng-template pTemplate>
+    <div class="flex flex-wrap justify-center items-center w-full">
+      <p-card header="{{ district.name }}" styleClass="flex items-center w-full">
+        <section pDraggable class="flex">
+          <div class="detail">
+            <h5><fa-icon [icon]="faPerson"></fa-icon>{{ district.primarySalesPerson.name }}</h5>
+          </div>
+          <div class="tag">
+            <p-tag value="Primary"></p-tag>
+          </div>
+        </section>
+        @for (salesPerson of district.secondarySalesPersons; track salesPerson) {
+        <section class="flex">
+          <div class="detail">
+            <h5><fa-icon [icon]="faPerson"></fa-icon>{{ salesPerson.name }}</h5>
+          </div>
+          <div class="tag">
+            <p-tag severity="info" value="Secondary"></p-tag>
+          </div>
+        </section>
+        } @for (stores of district.stores; track stores) {
+        <section class="flex">
+          <div class="detail">
+            <h5><fa-icon [icon]="faStore"></fa-icon>{{ stores }}</h5>
+          </div>
+        </section>
+        }
+      </p-card>
+    </div>
+  </ng-template>
+  <ng-template pTemplate>
+    <div class="flex flex-wrap items-center">
+      <section class="flex flex-row justify-center w-full space-x-16">
+        @if(salesPersons$ | async; as salesPersons) {
+        <div class="">
+          <p-table [value]="availableSalesPersons" styleClass="w-full">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>All Sales Person</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-salesPerson>
+              <tr
+                pDraggable
+                (onDragStart)="dragAvailableSalesPersonStart(salesPerson)"
+                (onDragEnd)="dragAvailableSalesPersonEnd()"
+                class="cursor-move"
+              >
+                <td><fa-icon [icon]="faPerson"></fa-icon>{{ salesPerson.name }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        }
+        <div class="">
+          <p-table
+            pDroppable
+            (onDrop)="dropAvailableSalesPerson('primary')"
+            [value]="[selectedPrimarySalesPerson]"
+            styleClass="w-full"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th><p-tag value="Primary Sales Person"></p-tag></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-salesPerson>
+              <tr>
+                <td><fa-icon [icon]="faPerson"></fa-icon>{{ salesPerson.name }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="">
+          <p-table
+            pDroppable
+            (onDrop)="dropAvailableSalesPerson('secondary')"
+            [value]="selectedSecondarySalesPerson"
+            styleClass="w-full"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th><p-tag severity="info" value="Secondary Sales Person"></p-tag></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-salesPerson>
+              <tr
+                pDraggable
+                (onDragStart)="dragSecondarySalesPersonStart(salesPerson)"
+                (onDragEnd)="dragSecondarySalesPersonEnd()"
+                class="cursor-move"
+              >
+                <td><fa-icon [icon]="faPerson"></fa-icon>{{ salesPerson.name }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </section>
+      <section class="flex flex-row justify-center w-full space-x-16">
+        <p-button
+          label="Update"
+          [loading]="isLoading"
+          (onClick)="updateDistrictSalesPerson()"
+        ></p-button>
+        <p-button
+          label="Reset"
+          [loading]="isLoading"
+          (onClick)="resetDistrictSalesPerson()"
+        ></p-button>
+      </section>
+    </div>
+  </ng-template>
+</p-splitter>
+}
